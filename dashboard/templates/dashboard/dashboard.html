@@ -1,0 +1,123 @@
+{% extends "dashboard/base.html" %}
+
+{% block scripts %}
+<script>
+$(function() {
+    $(".draggable").draggable({
+        revert: "invalid",
+        cursor: "move",
+        helper: "clone"
+    });
+
+    $(".droppable").droppable({
+    drop: function(event, ui) {
+        var maxPosts = $(this).data("max-posts");
+        if ($(this).children().length < maxPosts) {
+            var clonedElement = ui.draggable.clone().removeAttr("style");
+            $(this).append(clonedElement);
+            clonedElement.draggable({
+                revert: "invalid",
+                cursor: "move",
+                helper: "clone",
+                start: function(event, ui) {
+                    $(this).remove();  // Remove the original post from the section it was dragged from
+                }
+            });
+            ui.draggable.remove();  // Remove the original element from the "Published Posts" section
+        }
+    }
+});
+
+
+
+});
+
+    $("#save-order").click(function() {
+        var orderData = {
+            "hero": [],
+            "top_news": [],
+            "latest": []
+        };
+
+        $("#hero-section ul").children().each(function(index, element) {
+            orderData["hero"].push($(element).data("post-id"));
+        });
+
+        $("#top-news-section ul").children().each(function(index, element) {
+            orderData["top_news"].push($(element).data("post-id"));
+        });
+
+        $("#latest-section ul").children().each(function(index, element) {
+            orderData["latest"].push($(element).data("post-id"));
+        });
+
+        $.ajax({
+            url: "/dashboard/save_order/",
+            method: "POST",
+            data: JSON.stringify(orderData),
+            contentType: "application/json",
+            dataType: "json",
+            success: function(response) {
+                if (response.success) {
+                    alert("Order saved successfully.");
+                } else {
+                    alert("Error saving order.");
+                }
+            },
+            error: function() {
+                alert("Error saving order.");
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+
+
+{% block content %}
+    <h1>Dashboard</h1>
+
+    <div class="published-posts">
+        <h2>Published Posts</h2>
+        <ul id="published-posts-list">
+    {% for post in published_posts %}
+        <li class="draggable draggable-post" data-post-id="{{ post.id }}">{{ post.title }}</li>
+    {% endfor %}
+</ul>
+
+    </div>
+
+    <div class="section" id="hero-section">
+    <h2>Hero Slot</h2>
+    <ul class="droppable" data-max-posts="1" style="min-height: 50px; border: 1px solid black;">
+        {% for post in ordered_posts.hero %}
+            <li class="draggable" data-post-id="{{ post.id }}">{{ post.title }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="section" id="top-news-section">
+    <h2>Top News</h2>
+    <ul class="droppable" data-max-posts="5" style="min-height: 100px; border: 1px solid black;">
+        {% for post in ordered_posts.top_news %}
+            <li class="draggable" data-post-id="{{ post.id }}">{{ post.title }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="section" id="latest-section">
+    <h2>Latest</h2>
+    <ul class="droppable" data-max-posts="10" style="min-height: 200px; border: 1px solid black;">
+        {% for post in ordered_posts.latest %}
+            <li class="draggable" data-post-id="{{ post.id }}">{{ post.title }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+
+
+    <button id="save-order">Save Order</button>
+{% endblock %}
+
+
