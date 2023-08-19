@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from ckeditor.fields import RichTextField
+
 
 class Post(models.Model):
     STATUS_CHOICES = (
@@ -11,7 +13,7 @@ class Post(models.Model):
 
     title = models.CharField(max_length=200)
     teaser_text = models.TextField()
-    content = models.TextField()
+    content = RichTextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(max_length=15, choices=STATUS_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)

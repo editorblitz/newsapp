@@ -3,5 +3,5 @@
 {% block content %}
     <h1>{{ post.title }}</h1>
     <p>{{ post.teaser_text }}</p>
-    <div>{{ post.content }}</div>
+    <div>{{ post.content|safe }}</div>
 {% endblock %}

@@ -23,7 +23,7 @@ def dashboard(request):
 
     # Include the ordered posts and published_posts in the context
     context = {
-        'published_posts': published_posts ,
+        'published_posts': published_posts,
         'ordered_posts': ordered_posts
     }
 
