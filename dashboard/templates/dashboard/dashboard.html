@@ -2,6 +2,11 @@
 
 {% block scripts %}
 <script>
+
+function hideMessage() {
+    $("#message").text("");
+}
+
 $(function() {
     $(".draggable").draggable({
         revert: "invalid",
@@ -10,29 +15,48 @@ $(function() {
     });
 
     $(".droppable").droppable({
-    drop: function(event, ui) {
-        var maxPosts = $(this).data("max-posts");
-        if ($(this).children().length < maxPosts) {
-            var clonedElement = ui.draggable.clone().removeAttr("style");
-            $(this).append(clonedElement);
-            clonedElement.draggable({
-                revert: "invalid",
-                cursor: "move",
-                helper: "clone",
-                start: function(event, ui) {
-                    $(this).remove();  // Remove the original post from the section it was dragged from
-                }
-            });
-            ui.draggable.remove();  // Remove the original element from the "Published Posts" section
+        drop: function(event, ui) {
+            var maxPosts = $(this).data("max-posts");
+            if ($(this).children().length < maxPosts) {
+                var clonedElement = ui.draggable.clone().removeAttr("style");
+                $(this).append(clonedElement);
+                clonedElement.draggable({
+                    revert: "invalid",
+                    cursor: "move",
+                    helper: "clone",
+                    start: function(event, ui) {
+                        $(this).remove();  // Remove the original post from the section it was dragged from
+                    }
+                });
+                ui.draggable.remove();  // Remove the original element from the "Published Posts" section
+            }
         }
-    }
-});
-
-
-
+    });
 });
 
 $(document).ready(function() {
+    // Display the posts in the "Hero" section
+    var heroPosts = [];
+    $("#hero-section ul").children().each(function(index, element) {
+        heroPosts.push($(element).data("post-id"));
+    });
+    console.log("Hero posts:", heroPosts);
+
+    // Display the posts in the "Top News" section
+    var topNewsPosts = [];
+    $("#top-news-section ul").children().each(function(index, element) {
+        topNewsPosts.push($(element).data("post-id"));
+    });
+    console.log("Top News posts:", topNewsPosts);
+
+    // Display the posts in the "Latest" section
+    var latestPosts = [];
+    $("#latest-section ul").children().each(function(index, element) {
+        latestPosts.push($(element).data("post-id"));
+    });
+    console.log("Latest posts:", latestPosts);
+
+    // Event handler for the "Save Order" button
     $("#save-order").click(function() {
         var orderData = {
             "hero": [],
@@ -59,18 +83,28 @@ $(document).ready(function() {
             contentType: "application/json",
             dataType: "json",
             success: function(response) {
+                var messageElement = $("#message");
                 if (response.success) {
-                    alert("Order saved successfully.");
+                    messageElement.text("Order saved successfully.");
+                    messageElement.css("color", "green");
                 } else {
-                    alert("Error saving order.");
+                    messageElement.text("Error saving order.");
+                    messageElement.css("color", "red");
                 }
+                setTimeout(hideMessage, 2000); // Hide the message after 2 seconds
             },
             error: function() {
-                alert("Error saving order.");
+                var messageElement = $("#message");
+                messageElement.text("Error saving order.");
+                messageElement.css("color", "red");
+                setTimeout(hideMessage, 2000); // Hide the message after 2 seconds
             }
         });
     });
 });
+
+
+
 
 
 </script>
@@ -91,11 +125,11 @@ $(document).ready(function() {
 
     </div>
 
-    <div class="section" id="hero-section">
+  <div class="section" id="hero-section">
     <h2>Hero Slot</h2>
     <ul class="droppable" data-max-posts="1" style="min-height: 50px; border: 1px solid black;">
         {% for post in ordered_posts.hero %}
-            <li class="draggable" data-post-id="{{ post.id }}">{{ post.title }}</li>
+            <li class="draggable draggable-post" data-post-id="{{ post.id }}">{{ post.title }}</li>
         {% endfor %}
     </ul>
 </div>
@@ -104,7 +138,7 @@ $(document).ready(function() {
     <h2>Top News</h2>
     <ul class="droppable" data-max-posts="5" style="min-height: 100px; border: 1px solid black;">
         {% for post in ordered_posts.top_news %}
-            <li class="draggable" data-post-id="{{ post.id }}">{{ post.title }}</li>
+            <li class="draggable draggable-post" data-post-id="{{ post.id }}">{{ post.title }}</li>
         {% endfor %}
     </ul>
 </div>
@@ -113,7 +147,7 @@ $(document).ready(function() {
     <h2>Latest</h2>
     <ul class="droppable" data-max-posts="10" style="min-height: 200px; border: 1px solid black;">
         {% for post in ordered_posts.latest %}
-            <li class="draggable" data-post-id="{{ post.id }}">{{ post.title }}</li>
+            <li class="draggable draggable-post" data-post-id="{{ post.id }}">{{ post.title }}</li>
         {% endfor %}
     </ul>
 </div>
@@ -121,7 +155,9 @@ $(document).ready(function() {
 
 
 
+
     <button id="save-order">Save Order</button>
+    <div id="message"></div>
 {% endblock %}
 
 

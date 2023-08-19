@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Homepage</h1>
+
+    <div class="section" id="hero-section">
+        <h2>Hero Slot</h2>
+        {% for post in ordered_posts.hero %}
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.teaser }}</p>
+        {% endfor %}
+    </div>
+
+    <div class="section" id="top-news-section">
+        <h2>Top News</h2>
+        {% for post in ordered_posts.top_news %}
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.teaser }}</p>
+        {% endfor %}
+    </div>
+
+    <div class="section" id="latest-section">
+        <h2>Latest</h2>
+        {% for post in ordered_posts.latest %}
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.teaser }}</p>
+        {% endfor %}
+    </div>
+{% endblock %}
