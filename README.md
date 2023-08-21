@@ -20,7 +20,8 @@ The home page template starts with three sections:
 - Top News
 - Latest News
 
-To populate these sections on the home page, in admin, go to Homepage sections and add these sections:
+To populate these sections on the home page, in admin, go to Homepage sections and add these sections:\
+
 latest
 top_news
 hero
