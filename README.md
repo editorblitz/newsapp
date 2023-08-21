@@ -1,4 +1,4 @@
-"# newsapp" 
+# Basic news site 
 
 
 ## Initial setup
