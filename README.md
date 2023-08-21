@@ -20,10 +20,9 @@ The home page template starts with three sections:
 - Top News
 - Latest News
 
-To populate these sections on the home page, in admin, go to Homepage sections and add these sections:\
+To populate these sections on the home page, in admin, go to Homepage sections and add these sections:
+- latest
+- top_news
+- hero
 
-latest
-top_news
-hero
-
-These names are hard coded in the template, but not in the models.
+***(These names are hard coded in the template, but not in the models.)***
