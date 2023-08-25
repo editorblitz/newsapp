@@ -7,41 +7,48 @@
     }
 
     $(function() {
-        $(".published-posts .draggable").draggable({
-            revert: "invalid",
-            cursor: "move",
-            helper: "clone",
-            connectToSortable: ".sortable"
-        });
+    $(".published-posts .draggable").draggable({
+        revert: "invalid",
+        cursor: "move",
+        // helper: "clone",
+        connectToSortable: ".sortable"
+    });
 
-        $(".section ul").sortable({
-            items: "li:not(.placeholder)",
-            connectWith: ".section ul",
-            revert: true,
-            revertDuration: 100,
-            receive: function(event, ui) {
-                var maxPosts = $(this).data("max-posts");
-                if ($(this).children("li:not(.placeholder)").length > maxPosts) {
-                    $(ui.sender).sortable('cancel');
-                } else if (ui.sender.hasClass('published-posts')) {
-                    var clonedElement = ui.item.clone();
-                    clonedElement.draggable({
-                        revert: "invalid",
-                        cursor: "move",
-                        helper: "clone",
-                        connectToSortable: ".section ul"
-                    });
-                    $(".published-posts ul").append(clonedElement);
-                }
-            }
-        });
+    $(".section ul").sortable({
+    items: "li:not(.placeholder)",
+    connectWith: ".section ul",
+    revert: true,
+    revertDuration: 1000,
+    start: function(event, ui) {
+        ui.item.data('originalPosition', ui.item.index());
+    },
+    receive: function(event, ui) {
+        var maxPosts = $(this).data("max-posts");
 
-        $(".published-posts ul").droppable({
-            accept: ".section ul li",
-            drop: function(event, ui) {
-                ui.draggable.remove();
-            }
-        });
+        if ($(this).children("li:not(.placeholder)").length > maxPosts) {
+            // Cancel the sort operation to revert the item to its original position
+            $(ui.sender).sortable('cancel');
+        }
+    }
+});
+
+
+
+    $(".published-posts ul").droppable({
+        accept: ".section ul li",
+        drop: function(event, ui) {
+            var clonedElement = ui.draggable.clone();
+            clonedElement.removeClass('ui-draggable-dragging').addClass('draggable');
+            $(this).append(clonedElement);
+            ui.draggable.remove();
+            $(".published-posts .draggable").draggable({
+                revert: "invalid",
+                cursor: "move",
+                helper: "clone",
+                connectToSortable: ".sortable"
+            });
+        }
+    });
 
         $("#save-order").click(function() {
             var orderData = {
