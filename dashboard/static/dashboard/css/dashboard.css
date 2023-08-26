@@ -6,3 +6,10 @@
     cursor: move;
     background-color: #f0f0f0;
 }
+
+#published-posts-list {
+    border: 1px solid black;
+    min-height: 500px; /* adjust as needed */
+}
+
+

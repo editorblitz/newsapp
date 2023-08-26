@@ -35,20 +35,34 @@
 
 
     $(".published-posts ul").droppable({
-        accept: ".section ul li",
-        drop: function(event, ui) {
-            var clonedElement = ui.draggable.clone();
-            clonedElement.removeClass('ui-draggable-dragging').addClass('draggable');
+    accept: ".section ul li",
+    drop: function(event, ui) {
+        var clonedElement = ui.draggable.clone();
+        clonedElement.removeClass('ui-draggable-dragging').addClass('draggable');
+
+        // If the placeholder exists in the "Published Posts" section, replace it
+        if ($(".published-placeholder", this).length) {
+            $(".published-placeholder", this).replaceWith(clonedElement);
+        } else {
             $(this).append(clonedElement);
-            ui.draggable.remove();
-            $(".published-posts .draggable").draggable({
-                revert: "invalid",
-                cursor: "move",
-                helper: "clone",
-                connectToSortable: ".sortable"
-            });
         }
-    });
+
+        // Check if the last post is being dragged away
+        if ($("#published-posts-list li.draggable").length === 1) {
+            $(".published-placeholder").show();
+        }
+
+        ui.draggable.remove();
+
+        // Reinitialize draggable on the new item in the "Published Posts" section
+        $(".published-posts .draggable").draggable({
+            revert: "invalid",
+            cursor: "move",
+            connectToSortable: ".sortable"
+        });
+    }
+});
+
 
         $("#save-order").click(function() {
             var orderData = {
@@ -99,44 +113,52 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Dashboard</h1>
+<div style="display: flex;">
+    <!-- Left Column -->
+    <div style="flex: 1; padding-right: 20px;">
+        <div class="section" id="hero-section">
+            <h2>Hero Slot</h2>
+            <ul class="sortable" data-max-posts="1" style="min-height: 50px; border: 1px solid black;">
+                {% for post in ordered_posts.hero %}
+                    <li class="draggable-post" data-post-id="{{ post.id }}">{{ post.title }}</li>
+                {% endfor %}
+            </ul>
+        </div>
 
-    <div class="published-posts">
-        <h2>Published Posts</h2>
-        <ul id="published-posts-list">
+        <div class="section" id="top-news-section">
+            <h2>Top News</h2>
+            <ul class="sortable" data-max-posts="5" style="min-height: 250px; border: 1px solid black;">
+                {% for post in ordered_posts.top_news %}
+                    <li class="draggable-post" data-post-id="{{ post.id }}">{{ post.title }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="section" id="latest-section">
+            <h2>Latest</h2>
+            <ul class="sortable" data-max-posts="10" style="min-height: 400px; border: 1px solid black;">
+                {% for post in ordered_posts.latest %}
+                    <li class="draggable-post" data-post-id="{{ post.id }}">{{ post.title }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Right Column -->
+    <div style="flex: 1; padding-left: 20px;">
+        <div class="published-posts">
+            <h2>Published Posts</h2>
+            <ul id="published-posts-list">
     {% for post in published_posts %}
-        <li class="draggable draggable-post" data-post-id="{{ post.id }}">{{ post.title }}</li>
-    {% endfor %}
-        </ul>
-    </div>
+    <li class="draggable draggable-post" data-post-id="{{ post.id }}">{{ post.title }}</li>
+{% endfor %}
+<li class="published-placeholder" style="min-height: 50px; border: 1px dashed gray; cursor: pointer; {% if published_posts %}display: none;{% endif %}"></li>
 
-    <div class="section" id="hero-section">
-        <h2>Hero Slot</h2>
-        <ul class="sortable" data-max-posts="1" style="min-height: 50px; border: 1px solid black;">
-        {% for post in ordered_posts.hero %}
-            <li class="draggable-post" data-post-id="{{ post.id }}">{{ post.title }}</li>
-        {% endfor %}
-        </ul>
+</ul>
+        </div>
     </div>
+</div>
 
-    <div class="section" id="top-news-section">
-        <h2>Top News</h2>
-        <ul class="sortable" data-max-posts="5" style="min-height: 250px; border: 1px solid black;">
-        {% for post in ordered_posts.top_news %}
-            <li class="draggable-post" data-post-id="{{ post.id }}">{{ post.title }}</li>
-        {% endfor %}
-        </ul>
-    </div>
-
-    <div class="section" id="latest-section">
-        <h2>Latest</h2>
-        <ul class="sortable" data-max-posts="10" style="min-height: 400px; border: 1px solid black;">
-        {% for post in ordered_posts.latest %}
-            <li class="draggable-post" data-post-id="{{ post.id }}">{{ post.title }}</li>
-        {% endfor %}
-        </ul>
-    </div>
-
-    <button id="save-order" style="position: absolute; top: 10px; right: 30px;">Save Order</button>
-    <div id="message" style="position: absolute; top: 40px; right: 30px;"></div>
+<button id="save-order" style="position: absolute; top: 10px; right: 30px;">Save Order</button>
+<div id="message" style="position: absolute; top: 40px; right: 30px;"></div>
 {% endblock %}
