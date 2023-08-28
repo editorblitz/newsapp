@@ -130,8 +130,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CKEDITOR_CONFIGS = {
     'default': {
-        'toolbar': 'full',
-    },
+        'toolbar': 'Custom',
+        'format_tags': 'p;h1;h2;h3',
+        'toolbar_Custom': [
+            ['Format'],
+            ['Bold', 'Italic', 'Underline'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink'],
+            ['Undo', 'Redo'],
+            ['Source', 'RemoveFormat'],
+            ['Image', 'Table']
+        ]
+    }
 }
 
 CKEDITOR_UPLOAD_PATH = 'uploads/ckeditor/'

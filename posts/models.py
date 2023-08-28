@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from ckeditor.fields import RichTextField
+from django.utils.text import slugify
 
 
 class Post(models.Model):
@@ -18,6 +19,8 @@ class Post(models.Model):
     status = models.CharField(max_length=15, choices=STATUS_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    # auto_generate_slug = models.BooleanField(default=True)
+    # slug = models.SlugField(max_length=255 , unique=True , blank=True)
     def __str__(self):
         return self.title
 
