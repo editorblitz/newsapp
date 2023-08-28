@@ -1,44 +1,66 @@
 {% extends "base.html" %}
 
-{% block content %}
 
-<div class="hero bg-blue-500 p-8">
-  <div class="hero-text max-w-2xl mx-auto text-white">
-    <h1 class="text-3xl font-bold">Pharma Brief</h1>
-    <p>Your source for breaking news and analysis</p>
+
+{% block hero %}
+<!-- Hero Section with Navigation -->
+<div class="w-screen bg-gray-400 p-8 shadow-lg relative overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-t from-gray-600 to-gray-300 mix-blend-multiply"></div>
+
+  <!--  The mix-blend-multiply effect causes the overlapping gradient
+     to blend with the underlying bg-gray-400 color, creating a nuanced, multi-tone gray appearance.
+    You can further adjust the specific gray shades to fit your desired aesthetics.-->
+
+  <nav class="mb-6">
+    <ul class="flex space-x-6">
+      <li><a href="#" class="text-white hover:underline">Home</a></li>
+      <li><a href="#" class="text-white hover:underline">Features</a></li>
+      <li><a href="#" class="text-white hover:underline">About</a></li>
+      <li><a href="#" class="text-white hover:underline">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero-text max-w-2xl mx-auto text-white relative">
+    <h1 class="text-4xl font-extrabold tracking-tight mb-2">News In Brief</h1>
+    <p class="text-lg opacity-80">Your source for breaking news and analysis</p>
   </div>
 </div>
+{% endblock %}
 
-<main class="p-8 grid grid-cols-3 gap-8">
+{% block content %}
+
+<main class="p-8 grid grid-cols-3 gap-8 mt-6">
 
   <div class="col-span-2">
 
-    <div class="section" id="hero-section">
-      <h2 class="text-2xl font-bold">Hero Slot</h2>
+    <!-- Hero Slot Section -->
+    <div class="section mb-8" id="hero-section">
+      <h2 class="text-2xl font-extrabold mb-4 border-b-2 border-blue-600 pb-2">Hero Slot</h2>
       {% for post in ordered_posts.hero %}
-        <h3 class="text-xl font-bold">{{ post.title }}</h3>
-        <p>{{ post.teaser }}</p>
+        <h3 class="text-xl font-semibold mt-4">{{ post.title }}</h3>
+        <p class="text-gray-700 mb-4">{{ post.teaser }}</p>
       {% endfor %}
     </div>
 
+    <!-- Latest Section -->
     <div class="section" id="latest-section">
-      <h2 class="text-2xl font-bold">Latest</h2>
+      <h2 class="text-2xl font-extrabold mb-4 border-b-2 border-blue-600 pb-2">Latest</h2>
       {% for post in ordered_posts.latest %}
-        <h3 class="text-xl font-bold">{{ post.title }}</h3>
-        <p>{{ post.teaser }}</p>
+        <h3 class="text-xl font-semibold mt-4">{{ post.title }}</h3>
+        <p class="text-gray-700 mb-4">{{ post.teaser }}</p>
       {% endfor %}
     </div>
 
   </div>
 
-  <aside class="bg-gray-100 p-8 h-full">
-    <!-- right sidebar -->
+  <!-- Right Sidebar -->
+  <aside class="bg-gray-100 p-6 h-full shadow-inner">
 
-    <div class="section bg-gray-100 p-8" id="top-news-section">
-      <h2 class="text-2xl font-bold">Top News</h2>
+    <div class="section" id="top-news-section">
+      <h2 class="text-2xl font-extrabold mb-4 border-b-2 border-blue-600 pb-2">Top News</h2>
       {% for post in ordered_posts.top_news %}
-        <h3 class="text-xl font-bold">{{ post.title }}</h3>
-        <p>{{ post.teaser }}</p>
+        <h3 class="text-xl font-semibold mt-4">{{ post.title }}</h3>
+        <p class="text-gray-700 mb-4">{{ post.teaser }}</p>
       {% endfor %}
     </div>
 
