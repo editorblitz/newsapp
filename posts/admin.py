@@ -15,6 +15,7 @@ class PostAdminForm(forms.ModelForm):
 # Create a custom admin class using the above form
 class PostAdmin(admin.ModelAdmin):
     form = PostAdminForm
+    prepopulated_fields = {"slug": ("title" ,)}
 
 admin.site.register(Post, PostAdmin)
 admin.site.register(Tag)
